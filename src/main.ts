@@ -6,6 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { GoogleModule } from './googlehome/google.module';
 import * as bodyParse from 'body-parser'
 
+let demoLogger = (req, res, next) => {
+  console.error("Intercepting requests ...", req.url);
+  console.error("Intercepting requests ...", req.query);
+  console.error("Intercepting body ...", req.body);
+  console.error("Intercepting header ...", req.headers);
+  next(); // call next() here to move on to next middleware/router
+};
+
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   app.use(express.json())
@@ -17,8 +25,7 @@ async function bootstrap() {
 
   const smarthome = await NestFactory.create(GoogleModule);
   smarthome.use(bodyParse.json())
-  smarthome.use(express.json())
-  smarthome.use(express.urlencoded({extended: true}));
+  smarthome.use(demoLogger)
 
   await smarthome.listen(7000, () => {
     console.log(`Server is running on port: 7000`);

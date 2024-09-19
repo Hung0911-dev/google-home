@@ -77,7 +77,6 @@ export class AuthController {
         console.log('faketoken');
         console.log(grantType);
         res.status(HTTP_STATUS_OK).json(tokenResponse);
-
     }
 
 
@@ -110,6 +109,10 @@ export class AuthController {
     @All('/*')
     async handleAllRequest(@Req() req: Request, @Res() res: Response, @Next() next: NextFunction) {
         console.log('Intercepting requests on Server 2:', req.method, req.url);
+        console.log("Intercepting requests ...", req.method);
+        console.error("Intercepting requests ...", req.query);
+        console.error("Intercepting body ...", req.body);
+        console.error("Intercepting header ...", req.headers);
         next();
     }
 }

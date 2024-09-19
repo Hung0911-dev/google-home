@@ -10,11 +10,12 @@ import { RequestInterceptorMiddleware } from "src/providers/middlewares";
     providers: [GoogleService],
     controllers: [GoogleController]
 })
-export class GoogleModule implements NestModule{
+export class GoogleModule {
 
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-          .apply(RequestInterceptorMiddleware)
-      }
+    // configure(consumer: MiddlewareConsumer) {
+    //     consumer
+    //       .apply(RequestInterceptorMiddleware)
+    //       .forRoutes('/fulfillment')
+    //   }
 
 }

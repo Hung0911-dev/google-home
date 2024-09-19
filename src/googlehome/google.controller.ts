@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res } from "@nestjs/common";
+import { Controller, Post, Req, Res, Get } from "@nestjs/common";
 import { GoogleService } from "./google.service";
 import { Request, Response } from "express";
 import { smarthome, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1SyncRequest, SmartHomeV1SyncResponse } from "actions-on-google";
@@ -16,7 +16,7 @@ export class GoogleController {
     constructor(private readonly googleService: GoogleService) { }
 
     @Post('/fulfillment')
-    async handleFulfillment() {
+    async handleFulfillment(@Req() req: Request, @Res() res: Response) {
 
         console.log('fulfillment')
 
@@ -196,7 +196,7 @@ export class GoogleController {
             console.log("User account unlinked from Google Assistant");
             return {};
         });
-        return app
+        return app(req, res)
     }
 
     @All('/*')
