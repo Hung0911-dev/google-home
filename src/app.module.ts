@@ -3,6 +3,6 @@ import { AuthModule } from './auth/auth.module';
 import { GoogleModule } from './googlehome/google.module';
 
 @Module({
-  imports: [AuthModule, GoogleModule]
+  imports: [AuthModule]
 })
 export class AppModule {}

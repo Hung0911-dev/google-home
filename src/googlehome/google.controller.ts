@@ -3,29 +3,24 @@ import { GoogleService } from "./google.service";
 import { Request, Response } from "express";
 import { smarthome, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1SyncRequest, SmartHomeV1SyncResponse } from "actions-on-google";
 import { google } from "googleapis";
+import { All } from "@nestjs/common";
+import { Next } from "@nestjs/common";
+import { NextFunction } from "express";
 
-@Controller('/smarthome')
+const app = smarthome({
+    debug: true,
+})
+
+@Controller()
 export class GoogleController {
     constructor(private readonly googleService: GoogleService) { }
 
     @Post('/fulfillment')
-    async handleFulfillment(@Req() req: Request, @Res() res: Response) {
+    async handleFulfillment() {
+
+        console.log('fulfillment')
 
         const USER_ID = '123';
-
-        const app = smarthome({
-            debug: true,
-        })
-
-        const auth = new google.auth.GoogleAuth({
-            keyFilename: 'smart-home-key.json',
-            scopes: ['https://www.googleapis.com/auth/homegraph'],
-        })
-
-        const homegraph = google.homegraph({
-            version: 'v1',
-            auth: auth,
-        })
 
         app.onSync((body: SmartHomeV1SyncRequest): SmartHomeV1SyncResponse => {
             return {
@@ -163,7 +158,7 @@ export class GoogleController {
 
         app.onExecute(async (body): Promise<SmartHomeV1ExecuteResponse> => {
             const { requestId } = body;
-            const result : any = {
+            const result: any = {
                 ids: [],
                 status: 'success',
                 states: {
@@ -201,14 +196,12 @@ export class GoogleController {
             console.log("User account unlinked from Google Assistant");
             return {};
         });
-
-        return app;
-
+        return app
     }
 
-
-    @Post('/*')
-    async handleAll() {
-        console.log('Smarthome intent');
+    @All('/*')
+    async handleAllRequest(@Req() req: Request, @Res() res: Response, @Next() next: NextFunction) {
+        console.log('Intercepting requests on Server 2:', req.method, req.url);
+        next();
     }
 }
